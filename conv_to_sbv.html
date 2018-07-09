@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>.sbvを作成（YouTube用）</title>
     <link rel='stylesheet' href='main.css?ver=1.0.0' type='text/css' media='all' />
+    <script src="function.js"></script>
 </head>
 
 <body>
@@ -19,30 +20,8 @@
     <hr />
     <p id="footer">CC BY Shamrock Records, Inc.</p>
     <script>
-        function ParseToDate(dateStriing) {
-            var s = dateStriing ;
-            var a = s.split(/[^0-9]/);
-            return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],a[6] );
-        }
-
-        function millisecToTime(millisec) {
-            if (millisec < 0) {
-                return "" ;
-            }
-
-            var ms = millisec % 1000 ;
-            var totalSeconds = Math.floor(millisec / 1000) ;
-            var s = totalSeconds % 60 ;
-            var m = Math.floor(totalSeconds / 60) % 60 ;
-            var h = Math.floor(totalSeconds / (60 * 60)) ;
-
-            return ('00' + h).slice(-2) + ":" + ('00' + m).slice(-2) + ":" + ('00' + s).slice(-2) + "." + ('000' + ms).slice(-3) ;
-        }
-    
-        //Form要素を取得する
         var form = document.forms.openForm ;
         
-        //ファイルが読み込まれた時の処理
         form.csvFile.addEventListener('click', function(e) {
             this.value = "" ;
         }) ;
@@ -57,81 +36,44 @@
         
             reader.addEventListener('load', function() {
                 var content = reader.result ;
+                var lines = convert(content) ;
 
-                content = convert(content) ;
+                var result = "" ;
+                var firstElement = true ;
+                var offsetTime = "" ;
+    
+                for (var i=0; i<lines.length; i++) {
+                    var elements = lines[i] ;
+                    var nextElements = null ;
+                    
+                    if (i+1 < lines.length) {
+                        nextElements = lines[i+1] ;
+                    }
 
-                form.output.textContent = content ;
-            })
-        })
+                    if (firstElement == true) {
+                        offsetTime = ParseToDate(elements[0]) ;
+                        firstElement = false ;
+                    }
 
-        // CSV -> SRT
-        function convert(fileContent) {
-            var lines = new Array() ;
-            var rawLines = fileContent.split('\n') ;
+                    var beginTime = ParseToDate(elements[0]) ;
+                    var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(beginTime.getTime() + 5000) ;
+                    var content = elements[1] ;
 
-            for (var i=0; i<rawLines.length; i++) {
-                var rawLine = rawLines[i] ;
+                    beginTime -= offsetTime ;
+                    endTime -= offsetTime ;
+                    
+                    beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value), ".") ;
+                    endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value), ".") ;
 
-                if (rawLine == "") {
-                    continue ;
-                }
-                
-                var ignoreCamma = false ;
-                var element = "" ;
-                var elements = new Array() ;
-
-                for (var x=0; x<rawLine.length; x++) {
-                    var c = rawLine[x] ;
-
-                    if (c == '"') {
-                        ignoreCamma = !ignoreCamma ;
-                    } else if (c == ',' && !ignoreCamma) {
-                        elements.push(element) ;
-                        element = "" ;
-                    } else {
-                        element += c ;
+                    if (beginTime != "" && endTime != "") {
+                        result += beginTime + ',' + endTime + '\n' ;
+                        result += content + '\n\n' ;
                     }
                 }
 
-                elements.push(element) ;
-                lines.push(elements) ;
-            }
-
-            var result = "" ;
-            var firstElement = true ;
-            var offsetTime = "" ;
-            
-            for (var i=0; i<lines.length; i++) {
-                var elements = lines[i] ;
-                var nextElements = null ;
-                
-                if (i+1 < lines.length) {
-                    nextElements = lines[i+1] ;
-                }
-
-                if (firstElement == true) {
-                    offsetTime = ParseToDate(elements[0]) ;
-                    firstElement = false ;
-                }
-
-                var beginTime = ParseToDate(elements[0]) ;
-                var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(beginTime.getTime() + 5000) ;
-                var content = elements[1] ;
-
-                beginTime -= offsetTime ;
-                endTime -= offsetTime ;
-                
-                beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value)) ;
-                endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value)) ;
-
-                if (beginTime != "" && endTime != "") {
-                    result += beginTime + ',' + endTime + '\n' ;
-                    result += content + '\n\n' ;
-                }    
-            }
-
-            return result ;
-        }
+                form.output.textContent = result ;
+            })
+        })
     </script>
 </body>
 </html>
