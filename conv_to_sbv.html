@@ -2,46 +2,22 @@
 <head>
     <meta charset="utf-8">
     <title>.sbvを作成（YouTube用）</title>
+    <link rel='stylesheet' href='main.css?ver=1.0.0' type='text/css' media='all' />
 </head>
 
-<style>
-
-#offset_milliseconds {
-    font-size: medium;
-    margin: 25px;
-}
-
-#file_select, #file_submit {
-    font-size: medium;
-    margin: 25px;
-}
-
-#drop_zone {
-      border: 2px dashed #bbb;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 5px;
-      border-radius: 5px;
-      padding: 25px;
-      margin: 25px;
-      text-align: center;
-      font: 20pt bold 'Vollkorn';
-      color: #bbb;
-    }
-#convert_result {
-    width: 100%;
-}
-
-</style>
-
 <body>
-    <h1>.sbvを作成（YouTube用）</h1>
+    <div id="banner"><span id="banner_text">.sbvを作成（YouTube用）</span></div>
     <form name="openForm">
-        <div id="offset_milliseconds" >動画の開始から最初の字幕までのオフセット<br />
-        <input type="text" name="offsetTime" value="0" style="text-align: right;">ミリ秒</div>
-        <input id="file_select" name="csvFile" type="file" /><br />
-    <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
+            <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
+            <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
+            <div id="form_caption" >2.UDトークの会話ログ（.csv）を選択</div>
+            <input id="file_select" name="csvFile" type="file" />
+            <div id="form_caption" >3.変換結果を表示</div>
+            <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
     </form>
 
+    <hr />
+    <p id="footer">CC BY Shamrock Records, Inc.</p>
     <script>
         function ParseToDate(dateStriing) {
             var s = dateStriing ;
@@ -139,7 +115,7 @@
                 }
 
                 var beginTime = ParseToDate(elements[0]) ;
-                var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(Number(beginTime.toString()) + 5000) ;
+                var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(beginTime.getTime() + 5000) ;
                 var content = elements[1] ;
 
                 beginTime -= offsetTime ;

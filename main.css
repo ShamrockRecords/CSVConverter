@@ -1,0 +1,45 @@
+
+body {
+    font-family: sans-serif;
+}
+
+#banner {
+    border: 2px solid #bbb;
+    padding: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#footer {
+    text-align: center;
+}
+
+#banner_icon {
+    vertical-align:middle;
+}
+
+#banner_text {
+    vertical-align:middle;
+    font-size: 30pt;
+    font-weight: bold;
+    padding: 10px;
+ }
+
+#form_caption {
+    margin: 5px;
+}
+
+#offset_milliseconds {
+    font-size: medium;
+    margin: 5px;
+}
+
+#file_select {
+    font-size: medium;
+    margin: 5px;
+}
+
+#convert_result {
+    margin: 5px;
+    width: 100%;
+}
