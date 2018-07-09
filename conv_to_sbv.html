@@ -43,6 +43,10 @@
 
     <script>
         function millisecToTime(millisec) {
+            if (millisec < 0) {
+                return "" ;
+            }
+
             var ms = millisec % 1000 ;
             var totalSeconds = Math.floor(millisec / 1000) ;
             var s = totalSeconds % 60 ;
@@ -113,7 +117,7 @@
             var result = "" ;
             var firstElement = true ;
             var offsetTime = "" ;
-
+            
             for (var i=0; i<lines.length; i++) {
                 var elements = lines[i] ;
                 var nextElements = null ;
@@ -137,8 +141,10 @@
                 beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value)) ;
                 endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value)) ;
 
-                result += beginTime + ',' + endTime + '\n' ;
-                result += content + '\n\n' ;
+                if (beginTime != "" && endTime != "") {
+                    result += beginTime + ',' + endTime + '\n' ;
+                    result += content + '\n\n' ;
+                }    
             }
 
             return result ;
