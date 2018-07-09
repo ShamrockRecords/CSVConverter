@@ -42,6 +42,12 @@
     </form>
 
     <script>
+        function ParseToDate(dateStriing) {
+            var s = dateStriing ;
+            var a = s.split(/[^0-9]/);
+            return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],a[6] );
+        }
+
         function millisecToTime(millisec) {
             if (millisec < 0) {
                 return "" ;
@@ -128,12 +134,12 @@
                 }
 
                 if (firstElement == true) {
-                    offsetTime += Date.parse(elements[0]) ;
+                    offsetTime = ParseToDate(elements[0]) ;
                     firstElement = false ;
                 }
 
-                var beginTime = Date.parse(elements[0]) ;
-                var endTime = nextElements != null ? Date.parse(nextElements[0]) : new Date(Number(beginTime.toString()) + 5000) ;
+                var beginTime = ParseToDate(elements[0]) ;
+                var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(Number(beginTime.toString()) + 5000) ;
                 var content = elements[1] ;
 
                 beginTime -= offsetTime ;
@@ -152,6 +158,7 @@
 
             return result ;
         }
+
     </script>
 </body>
 </html>
