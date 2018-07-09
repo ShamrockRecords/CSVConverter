@@ -1,0 +1,149 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Convert To SRT</title>
+</head>
+
+<style>
+
+#offset_milliseconds {
+    font-size: medium;
+    margin: 25px;
+}
+
+#file_select, #file_submit {
+    font-size: medium;
+    margin: 25px;
+}
+
+#drop_zone {
+      border: 2px dashed #bbb;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      padding: 25px;
+      margin: 25px;
+      text-align: center;
+      font: 20pt bold 'Vollkorn';
+      color: #bbb;
+    }
+#convert_result {
+    width: 100%;
+}
+
+</style>
+
+<body>
+    <h1>Convert To SRT</h1>
+    <form name="openForm">
+        <div id="offset_milliseconds" >Offset Milliseconds <input type="text" name="offsetTime" value="0" style="text-align: right;">ms</div><br />
+        <input id="file_select" name="csvFile" type="file" /><br />
+        <textarea id="convert_result" name="output" cols="200" rows="50"></textarea><br />
+    </form>
+
+    <script>
+        function millisecToTime(millisec) {
+            var ms = millisec % 1000 ;
+            var totalSeconds = Math.floor(millisec / 1000) ;
+            var s = totalSeconds % 60 ;
+            var m = Math.floor(totalSeconds / 60) % 60 ;
+            var h = Math.floor(totalSeconds / (60 * 60)) ;
+
+            return ('00' + h).slice(-2) + ":" + ('00' + m).slice(-2) + ":" + ('00' + s).slice(-2) + "," + ('000' + ms).slice(-3) ;
+        }
+    
+        //Form要素を取得する
+        var form = document.forms.openForm ;
+        
+        //ファイルが読み込まれた時の処理
+        form.csvFile.addEventListener('click', function(e) {
+            this.value = "" ;
+        }) ;
+
+        form.csvFile.addEventListener('change', function(e) {
+            form.csvFile.textContent = "" ;
+
+            var result = e.target.files[0];
+            var reader = new FileReader() ;
+        
+            reader.readAsText(result) ;
+        
+            reader.addEventListener('load', function() {
+                var content = reader.result ;
+
+                content = convert(content) ;
+
+                form.output.textContent = content ;
+            })
+        })
+
+        // CSV -> SRT
+        function convert(fileContent) {
+            var lines = new Array() ;
+            var rawLines = fileContent.split('\n') ;
+
+            for (var i=0; i<rawLines.length; i++) {
+                var rawLine = rawLines[i] ;
+
+                if (rawLine == "") {
+                    continue ;
+                }
+                
+                var ignoreCamma = false ;
+                var element = "" ;
+                var elements = new Array() ;
+
+                for (var x=0; x<rawLine.length; x++) {
+                    var c = rawLine[x] ;
+
+                    if (c == '"') {
+                        ignoreCamma = !ignoreCamma ;
+                    } else if (c == ',' && !ignoreCamma) {
+                        elements.push(element) ;
+                        element = "" ;
+                    } else {
+                        element += c ;
+                    }
+                }
+
+                elements.push(element) ;
+                lines.push(elements) ;
+            }
+
+            var result = "" ;
+            var firstElement = true ;
+            var offsetTime = "" ;
+
+            for (var i=0; i<lines.length; i++) {
+                var elements = lines[i] ;
+                var nextElements = null ;
+                
+                if (i+1 < lines.length) {
+                    nextElements = lines[i+1] ;
+                }
+
+                if (firstElement == true) {
+                    offsetTime += Date.parse(elements[0]) ;
+                    firstElement = false ;
+                }
+
+                var beginTime = Date.parse(elements[0]) ;
+                var endTime = nextElements != null ? Date.parse(nextElements[0]) : new Date(Number(beginTime.toString()) + 5000) ;
+                var content = elements[1] ;
+
+                beginTime -= offsetTime ;
+                endTime -= offsetTime ;
+                
+                beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value)) ;
+                endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value)) ;
+
+                result += (i+1).toString() + '\n' ;
+                result += beginTime + ' --> ' + endTime + '\n' ;
+                result += content + '\n\n' ;
+            }
+
+            return result ;
+        }
+    </script>
+</body>
+</html>
