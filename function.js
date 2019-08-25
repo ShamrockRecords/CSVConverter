@@ -23,6 +23,10 @@ function convert(fileContent) {
     var lines = new Array() ;
     var rawLines = fileContent.split('\n') ;
 
+    var ignoreCamma = false ;
+    var element = "" ;
+    var elements = new Array() ;
+
     for (var i=0; i<rawLines.length; i++) {
         var rawLine = rawLines[i] ;
 
@@ -30,10 +34,6 @@ function convert(fileContent) {
             continue ;
         }
         
-        var ignoreCamma = false ;
-        var element = "" ;
-        var elements = new Array() ;
-
         for (var x=0; x<rawLine.length; x++) {
             var c = rawLine[x] ;
 
@@ -47,9 +47,16 @@ function convert(fileContent) {
             }
         }
 
-        elements.push(element) ;
-        lines.push(elements) ;
-    }
+        if (!ignoreCamma) {
+            elements.push(element) ;
+            lines.push(elements) ;
+
+            element = "" ;
+            elements = new Array() ;
+        } else {
+            element += '\n' ;
+        }
+     }
 
     return lines ;
 }
