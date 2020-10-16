@@ -63,7 +63,7 @@
                     endTime -= offsetTime ;
                     
                     beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value), ".") ;
-                    endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value), ".") ;
+                    endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value) - 100, ".") ;
 
                     if (beginTime != "" && endTime != "") {
                         result += beginTime + ',' + endTime + '\n' ;
