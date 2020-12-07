@@ -11,9 +11,11 @@
     <form name="openForm">
             <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
             <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
-            <div id="form_caption" >2.UDトークの会話ログ（.csv）を選択</div>
+            <div id="form_caption" >2.１行の文字数（文字数）</div>
+            <input id="line_count" type="text" name="lineCount" value="30" style="text-align: right;">
+            <div id="form_caption" >3.UDトークの会話ログ（.csv）を選択</div>
             <input id="file_select" name="csvFile" type="file" />
-            <div id="form_caption" >3.変換結果を表示</div>
+            <div id="form_caption" >4.変換結果を表示</div>
             <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
     </form>
     
@@ -60,17 +62,42 @@
                     var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(beginTime.getTime() + 5000) ;
                     var content = elements[1] ;
 
-                    beginTime -= offsetTime ;
-                    endTime -= offsetTime ;
-                    
-                    beginTime = millisecToTime(Number(beginTime.toString()) + Number(form.offsetTime.value), ",") ;
-                    endTime = millisecToTime(Number(endTime.toString()) + Number(form.offsetTime.value), ",") ;
+                    if (content.length == 0) {
+                        continue ;
+                    }
 
-                    if (beginTime != "" && endTime != "") {
-                        result += num.toString() + '\n' ;
-                        result += beginTime + ' --> ' + endTime + '\n' ;
-                        result += content + '\n\n' ;
-                        num++ ;
+                    var timeOfChar = (endTime - beginTime) / content.length ;
+                    
+                    var countPerLine = Number(form.lineCount.value) ;
+                    var currnetIndex = 0 ;
+                    var currentOffset = 0 ;
+
+                    while (currnetIndex < content.length) {
+                        var tempContent = "" ;
+
+                        if (currnetIndex + countPerLine > content.length) {
+                            tempContent = content.substring(currnetIndex, content.length - 1) ;
+                        } else {
+                            tempContent = content.substring(currnetIndex, currnetIndex + countPerLine) ;
+                        }
+
+                        var tempBeginTime = currnetIndex * timeOfChar ;   
+                        var tempEndTime = tempBeginTime + (timeOfChar * tempContent.length) ;
+                        
+                        tempBeginTime = Math.floor(tempBeginTime) ;
+                        tempEndTime = Math.floor(tempEndTime) ;
+                        
+                        var tempBeginTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempBeginTime, ".") ;
+                        var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime - 100, ".") ;
+
+                        if (tempBeginTimeF != "" && tempEndTimeF != "" && tempContent.length != 0) {
+                            result += num.toString() + '\n' ;
+                            result += tempBeginTimeF + ' --> ' + tempEndTimeF + '\n' ;
+                            result += tempContent + '\n\n' ;
+                            num++ ;
+                        }
+                        
+                        currnetIndex += countPerLine ;
                     }
                 }
 
