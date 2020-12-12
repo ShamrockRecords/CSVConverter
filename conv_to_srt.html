@@ -74,14 +74,28 @@
 
                     while (currnetIndex < content.length) {
                         var tempContent = "" ;
+                        var tempBeginTime = currnetIndex * timeOfChar ;   
+                        
+                        while (tempContent.length < countPerLine) {
+                            tempContent += content.substring(currnetIndex, currnetIndex + 1) ;
 
-                        if (currnetIndex + countPerLine > content.length) {
-                            tempContent = content.substring(currnetIndex, content.length - 1) ;
-                        } else {
-                            tempContent = content.substring(currnetIndex, currnetIndex + countPerLine) ;
+                            currnetIndex++ ;
+
+                            if (currnetIndex == content.length) {
+                                break ;
+                            }
+
+                            if (tempContent.endsWith("。")) {
+                                break ;
+                            }
                         }
 
-                        var tempBeginTime = currnetIndex * timeOfChar ;   
+                        tempContent = tempContent.trim();
+
+                        if (tempContent == "。" || tempContent == "、") {
+                            continue ;
+                        }
+
                         var tempEndTime = tempBeginTime + (timeOfChar * tempContent.length) ;
                         
                         tempBeginTime = Math.floor(tempBeginTime) ;
@@ -96,8 +110,6 @@
                             result += tempContent + '\n\n' ;
                             num++ ;
                         }
-                        
-                        currnetIndex += countPerLine ;
                     }
                 }
 
