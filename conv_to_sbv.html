@@ -21,6 +21,7 @@
 
     <hr />
     <p id="footer">CC BY Shamrock Records, Inc.</p>
+    <script type="text/javascript" src="tiny_segmenter.js" charset="UTF-8"></script>
     <script>
         var form = document.forms.openForm ;
         
@@ -70,42 +71,38 @@
                     var countPerLine = Number(form.lineCount.value) ;
                     var currnetIndex = 0 ;
                     var currentOffset = 0 ;
+                    var segmenter = new TinySegmenter();
+                    var segs = segmenter.segment(content); 
 
-                    while (currnetIndex < content.length) {
-                        var tempContent = "" ;
-                        var tempBeginTime = currnetIndex * timeOfChar ;   
+                    var tempContent = "";
+
+                    for (var s=0; s<=segs.length; s++) {
                         
-                        while (tempContent.length < countPerLine) {
-                            tempContent += content.substring(currnetIndex, currnetIndex + 1) ;
-
-                            currnetIndex++ ;
-
-                            if (currnetIndex == content.length) {
-                                break ;
-                            }
-
-                            if (tempContent.endsWith("。")) {
-                                break ;
-                            }
+                        if (s < segs.length) {
+                            tempContent += segs[s] ;
                         }
 
-                        tempContent = tempContent.trim();
+                        if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
+                            tempContent = tempContent.trim();
 
-                        if (tempContent == "。" || tempContent == "、") {
-                            continue ;
-                        }
+                            if (tempContent.length != 0 && tempContent != "、" && tempContent != "。") {
+                                var tempBeginTime = currnetIndex * timeOfChar ;   
+                                var tempEndTime = tempBeginTime + (timeOfChar * tempContent.length) ;
 
-                        var tempEndTime = tempBeginTime + (timeOfChar * tempContent.length) ;
-                        
-                        tempBeginTime = Math.floor(tempBeginTime) ;
-                        tempEndTime = Math.floor(tempEndTime) ;
-                        
-                        var tempBeginTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempBeginTime, ".") ;
-                        var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime - 100, ".") ;
+                                tempBeginTime = Math.floor(tempBeginTime) ;
+                                tempEndTime = Math.floor(tempEndTime) ;
 
-                        if (tempBeginTimeF != "" && tempEndTimeF != "" && tempContent.length != 0) {
-                            result += tempBeginTimeF + ',' + tempEndTimeF + '\n' ;
-                            result += tempContent + '\n\n' ;
+                                var tempBeginTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempBeginTime, ".") ;
+                                var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime - 100, ".") ;
+
+                                if (tempBeginTimeF != "" && tempEndTimeF != "") {
+                                    result += tempBeginTimeF + ',' + tempEndTimeF + '\n' ;
+                                    result += tempContent + '\n\n' ;
+                                }
+                            }
+ 
+                            currnetIndex += tempContent.length ;
+                            tempContent = "";
                         }
                     }
                 }
