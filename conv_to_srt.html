@@ -8,15 +8,17 @@
 
 <body>
     <div id="banner"><span id="banner_text">.srtを作成（Facebook動画用）</span></div>
-    <div><p>【例外対応】<ul><li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
-    <li>一番最後の発話は終わりの時間がわからないので分割処理をしません。</li>
-    </ul>
-        <p>※これらを正確に処理するためにはUDトークからの書き出しデータを変更する必要があるので少々お待ちください。</p>
-    </p></div>
+    <div><p>【仕様】<ul><li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
+        <li>一番最後の発話は終わりの時間がわからないので分割処理をしません。</li>
+        <li>ひとつの文字数を超えるか「。」で自動的に区切ります。</li>
+        <li>「、」は半角スペースに、「。」は削除します。</li>
+        </ul>
+            <p>※これらを正確に処理するためにはUDトークからの書き出しデータを変更する必要があるので少々お待ちください。</p>
+        </p></div>
     <form name="openForm">
             <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
             <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
-            <div id="form_caption" >2.１行の文字数（文字数）</div>
+            <div id="form_caption" >2.ひとつの文字数（半分で折り返します）</div>
             <input id="line_count" type="text" name="lineCount" value="30" style="text-align: right;">
             <div id="form_caption" >3.UDトークの会話ログ（.csv）を選択</div>
             <input id="file_select" name="csvFile" type="file" />
@@ -104,7 +106,14 @@
                         }
 
                         if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
+                            if (tempContent.length > countPerLine / 2) {
+                                tempContent = tempContent.slice(0, countPerLine / 2) + "\n" + tempContent.slice(countPerLine / 2) ;
+                            }
+                            
                             tempContent = tempContent.trim();
+                            tempContent = tempContent.replace("、", " ") ;
+                            tempContent = tempContent.replace("、", " ") ;
+                            tempContent = tempContent.replace("。", "") ;
 
                             if (tempContent.length != 0 && tempContent != "、" && tempContent != "。") {
                                 var tempBeginTime = currnetIndex * timeOfChar ;   
