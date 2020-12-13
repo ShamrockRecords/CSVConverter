@@ -60,20 +60,35 @@
                     }
 
                     var beginTime = ParseToDate(elements[0]) ;
-                    var endTime = nextElements != null ? ParseToDate(nextElements[0]) : new Date(beginTime.getTime() + 5000) ;
+                    var endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
                     var content = elements[1] ;
 
                     if (content.length == 0) {
                         continue ;
                     }
 
-                    var timeOfChar = (endTime - beginTime) / content.length ;
+                    var timeOfChar = 60000 / 300 ; // average
+
+                    if (endTime != 0) {
+                        timeOfChar = (endTime - beginTime) / content.length ;
+                    
+                        if (timeOfChar > 60000 / 300) { // if over average, reset to average.
+                            timeOfChar = 60000 / 300 ;   
+                        }
+                    }
                     
                     var countPerLine = Number(form.lineCount.value) ;
                     var currnetIndex = 0 ;
                     var currentOffset = 0 ;
                     var segmenter = new TinySegmenter();
-                    var segs = segmenter.segment(content); 
+                    var segs ;
+                    
+                    if (endTime != 0) {
+                        segs = segmenter.segment(content); 
+                    } else {
+                        segs = new Array();
+                        segs.push(content);
+                    }
 
                     var tempContent = "";
 
