@@ -8,6 +8,11 @@
 
 <body>
     <div id="banner"><span id="banner_text">.srtを作成（Facebook動画用）</span></div>
+    <div><p>【例外対応】<ul><li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
+    <li>一番最後の発話は終わりの時間がわからないので分割処理をしません。</li>
+    </ul>
+        <p>※これらを正確に処理するためにはUDトークからの書き出しデータを変更する必要があるので少々お待ちください。</p>
+    </p></div>
     <form name="openForm">
             <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
             <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
