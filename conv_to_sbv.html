@@ -101,7 +101,18 @@
                     for (var s=0; s<=segs.length; s++) {
                         
                         if (s < segs.length) {
-                            tempContent += segs[s] ;
+                            var remainContent = "" ;
+
+                            for (var t=s; t<segs.length; t++) {
+                                remainContent += segs[t] ;
+                            }
+
+                            if (remainContent.length < 6) {
+                                tempContent += remainContent ;
+                                s = segs.length ;
+                            } else {
+                                tempContent += segs[s] ;
+                            }    
                         }
 
                         if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
