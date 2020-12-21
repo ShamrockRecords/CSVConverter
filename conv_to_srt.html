@@ -11,7 +11,6 @@
     <div><p>【仕様】<ul><li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
         <li>一番最後の発話は終わりの時間がわからないので分割処理をしません。</li>
         <li>ひとつの文字数を超えるか「。」で自動的に区切ります。</li>
-        <li>「、」は半角スペースに、「。」は削除します。</li>
         </ul>
             <p>※これらを正確に処理するためにはUDトークからの書き出しデータを変更する必要があるので少々お待ちください。</p>
         </p></div>
@@ -20,9 +19,12 @@
             <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
             <div id="form_caption" >2.ひとつの文字数（半分で折り返します）</div>
             <input id="line_count" type="text" name="lineCount" value="30" style="text-align: right;">
-            <div id="form_caption" >3.UDトークの会話ログ（.csv）を選択</div>
+            <div id="form_caption" >3.オプション</div>
+            <input id="replacing_dots" type="checkbox" name="replacingDots" value="" style="text-align: right;" checked>「、」は半角スペースに、「。」は削除する</input><br />
+            <input id="dividing" type="checkbox" name="dividing" value="" style="text-align: right;" checked>行を半分で折り返す</input>
+            <div id="form_caption" >4.UDトークの会話ログ（.csv）を選択</div>
             <input id="file_select" name="csvFile" type="file" />
-            <div id="form_caption" >4.変換結果を表示</div>
+            <div id="form_caption" >5.変換結果を表示</div>
             <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
     </form>
     
@@ -47,6 +49,9 @@
             reader.addEventListener('load', function() {
                 var content = reader.result ;
                 var lines = convert(content) ;
+
+                var replacingDots = form.replacingDots.checked ;
+                var dividing = form.dividing.checked ;
 
                 var result = "" ;
                 var firstElement = true ;
@@ -102,18 +107,34 @@
                     for (var s=0; s<=segs.length; s++) {
                         
                         if (s < segs.length) {
-                            tempContent += segs[s] ;
+                            var remainContent = "" ;
+
+                            for (var t=s; t<segs.length; t++) {
+                                remainContent += segs[t] ;
+                            }
+
+                            if (remainContent.length < 6) {
+                                tempContent += remainContent ;
+                                s = segs.length ;
+                            } else {
+                                tempContent += segs[s] ;
+                            }    
                         }
 
                         if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
-                            if (tempContent.length > countPerLine / 2) {
-                                tempContent = tempContent.slice(0, countPerLine / 2) + "\n" + tempContent.slice(countPerLine / 2) ;
+                            if (dividing) {
+                                if (tempContent.length > countPerLine / 2) {
+                                    tempContent = tempContent.slice(0, countPerLine / 2) + "\n" + tempContent.slice(countPerLine / 2) ;
+                                }
                             }
-                            
+                                                       
                             tempContent = tempContent.trim();
-                            tempContent = tempContent.replace("、", " ") ;
-                            tempContent = tempContent.replace("、", " ") ;
-                            tempContent = tempContent.replace("。", "") ;
+
+                            if (replacingDots) {
+                                tempContent = tempContent.replace("、", " ") ;
+                                tempContent = tempContent.replace("、", " ") ;
+                                tempContent = tempContent.replace("。", "") ;                               
+                            }
 
                             if (tempContent.length != 0 && tempContent != "、" && tempContent != "。") {
                                 var tempBeginTime = currnetIndex * timeOfChar ;   
