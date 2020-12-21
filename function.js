@@ -34,6 +34,10 @@ function convert(fileContent) {
             continue ;
         }
         
+        if (rawLine.startsWith("#")) {
+            continue ;
+        }
+
         for (var x=0; x<rawLine.length; x++) {
             var c = rawLine[x] ;
 
