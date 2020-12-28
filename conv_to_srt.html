@@ -23,8 +23,11 @@
             <input id="replacing_dots" type="checkbox" name="replacingDots" value="" style="text-align: right;" checked>「、」は半角スペースに、「。」は削除する</input><br />
             <input id="dividing" type="checkbox" name="dividing" value="" style="text-align: right;" checked>行を半分で折り返す</input>
             <div id="form_caption" >4.UDトークの会話ログ（.csv）を選択</div>
-            <input id="file_select" name="csvFile" type="file" />
-            <div id="form_caption" >5.変換結果を表示</div>
+            <input id="file_select" name="csvFile" type="file" /><br />
+            <input type="radio" name="version" value="0" checked>自動判別</input><br />
+            <input type="radio" name="version" value="1">v1</input><br />
+            <input type="radio" name="version" value="2">v2</input><br />
+             <div id="form_caption" >5.変換結果を表示</div>
             <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
     </form>
     
@@ -50,6 +53,33 @@
                 var content = reader.result ;
                 var lines = convert(content) ;
 
+                var version = 2 ;
+
+                if (form.version.value == 0) {
+                    // v1かv2の自動判別
+                    for (var i=0; i<lines.length && i<10; i++) {
+                        var elements = lines[i] ;
+
+                        if (elements.length < 3) {
+                            version = 1 ;
+                            break ;
+                        }
+
+                        if (elements[1] != "") {
+                            var time = ParseToDate(elements[1]) ;
+                                            
+                            if (time == null) {
+                                version = 1 ;
+                                break ;
+                            } 
+                        }
+                    }
+                } else if (form.version.value == 1) {
+                    version = 1 ;
+                } else if (form.version.value == 2) {
+                    version = 2 ;
+                }
+
                 var replacingDots = form.replacingDots.checked ;
                 var dividing = form.dividing.checked ;
 
@@ -72,8 +102,23 @@
                     }
 
                     var beginTime = ParseToDate(elements[0]) ;
-                    var endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
-                    var content = elements[1] ;
+                    var endTime = 0 ;
+                    var content = "" ;
+
+                    if (version == 1) {
+                        // v1
+                        endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+                        content = elements[1] ;
+                    } else {
+                        // v2
+                        if (elements[1] != "") {
+                            endTime = ParseToDate(elements[1]) ;
+                        } else {
+                            endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+                        }
+                        
+                        content = elements[2] ;
+                    }
 
                     if (content.length == 0) {
                         continue ;

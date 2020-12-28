@@ -1,7 +1,12 @@
 function ParseToDate(dateStriing) {
     var s = dateStriing ;
     var a = s.split(/[^0-9]/);
-    return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],a[6] );
+
+    if (a.length < 7) {
+        return null ;
+    } else {
+        return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],a[6] );
+    }
 }
 
 function millisecToTime(millisec, separator) {
