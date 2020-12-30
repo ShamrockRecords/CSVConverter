@@ -69,3 +69,159 @@ function convert(fileContent) {
 
     return lines ;
 }
+
+function generateResult(listener) {
+    var version = 2 ;
+
+    if (form.version.value == 0) {
+        // v1かv2の自動判別
+        for (var i=0; i<lines.length && i<10; i++) {
+            var elements = lines[i] ;
+
+            if (elements.length < 3) {
+                version = 1 ;
+                break ;
+            }
+
+            if (elements[1] != "") {
+                var time = ParseToDate(elements[1]) ;
+                                
+                if (time == null) {
+                    version = 1 ;
+                    break ;
+                } 
+            }
+        }
+    } else if (form.version.value == 1) {
+        version = 1 ;
+    } else if (form.version.value == 2) {
+        version = 2 ;
+    }
+
+    document.getElementById("detectedVersion").innerText = "読み込んだファイルはバージョン" + version + "です。" ;
+
+    var replacingDots = form.replacingDots.checked ;
+    var dividing = form.dividing.checked ;
+
+    var result = "" ;
+    var firstElement = true ;
+    var offsetTime = "" ;
+    var num = 1 ;
+
+    for (var i=0; i<lines.length; i++) {
+        var elements = lines[i] ;
+        var nextElements = null ;
+        
+        if (i+1 < lines.length) {
+            nextElements = lines[i+1] ;
+        }
+
+        if (firstElement == true) {
+            offsetTime = ParseToDate(elements[0]) ;
+            firstElement = false ;
+        }
+
+        var beginTime = ParseToDate(elements[0]) ;
+        var endTime = 0 ;
+        var content = "" ;
+
+        if (version == 1) {
+            // v1
+            endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+            content = elements[1] ;
+        } else {
+            // v2
+            if (elements[1] != "") {
+                endTime = ParseToDate(elements[1]) ;
+            } else {
+                endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+            }
+            
+            content = elements[2] ;
+        }
+
+        if (content.length == 0) {
+            continue ;
+        }
+
+        var timeOfChar = 60000 / 300 ; // average
+
+        if (endTime != 0) {
+            timeOfChar = (endTime - beginTime) / content.length ;
+        
+            if (timeOfChar > 60000 / 300) { // if over average, reset to average.
+                timeOfChar = 60000 / 300 ;   
+            }
+        }
+        
+        var countPerLine = Number(form.lineCount.value) ;
+        var currnetIndex = 0 ;
+        var currentOffset = 0 ;
+        var segmenter = new TinySegmenter();
+        var segs ;
+        
+        if (endTime != 0) {
+            segs = segmenter.segment(content); 
+        } else {
+            segs = new Array();
+            segs.push(content);
+        }
+
+        var tempContent = "";
+
+        for (var s=0; s<=segs.length; s++) {
+            
+            if (s < segs.length) {
+                var remainContent = "" ;
+
+                for (var t=s; t<segs.length; t++) {
+                    remainContent += segs[t] ;
+                }
+
+                if (remainContent.length < 6) {
+                    tempContent += remainContent ;
+                    s = segs.length ;
+                } else {
+                    tempContent += segs[s] ;
+                }    
+            }
+
+            if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
+                if (dividing) {
+                    if (tempContent.length > countPerLine / 2) {
+                        tempContent = tempContent.slice(0, countPerLine / 2) + "\n" + tempContent.slice(countPerLine / 2) ;
+                    }
+                }
+                                        
+                tempContent = tempContent.trim();
+
+                if (replacingDots) {
+                    tempContent = tempContent.replace("、", " ") ;
+                    tempContent = tempContent.replace("、", " ") ;
+                    tempContent = tempContent.replace("。", "") ;
+                }
+
+                if (tempContent.length != 0 && tempContent != "、" && tempContent != "。") {
+                    var tempBeginTime = currnetIndex * timeOfChar ;   
+                    var tempEndTime = tempBeginTime + (timeOfChar * tempContent.length) ;
+
+                    tempBeginTime = Math.floor(tempBeginTime) ;
+                    tempEndTime = Math.floor(tempEndTime) ;
+
+                    var tempBeginTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempBeginTime, ".") ;
+                    var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime - 100, ".") ;
+
+                    if (tempBeginTimeF != "" && tempEndTimeF != "") {
+                        result += listener(num, tempBeginTimeF, tempEndTimeF, tempContent) ;
+                        num++ ;
+                    }
+                }
+
+                currnetIndex += tempContent.length ;
+                tempContent = "";
+            }
+        }
+    }
+
+    form.output.textContent = result ;
+}
