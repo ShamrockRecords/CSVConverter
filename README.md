@@ -1,6 +1,6 @@
 # CSVConverter
 
-https://ShamrockRecords.github.io/CSVConverter/
+https://shamrockRecords.github.io/CSVConverter/
 
 このプログラムはUDトークで書き出されたCSVファイルをYouTubeおよびFacebook動画のクローズドキャプション用のファイルに変換するためのものです。
 
