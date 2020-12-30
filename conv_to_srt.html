@@ -22,19 +22,22 @@
         <input type="radio" name="version" value="2">v2</input><br />
         <p id="detectedVersion"></p>
         <hr />
+        
         <p>【設定】</p>
         <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
-        <input id="offset_milliseconds" type="text" name="offsetTime" value="0" style="text-align: right;">
-        <input id="update_offset_milliseconds" type="button" value="更新" name="updateOffsetMillisecondsButton">
+        <input id="number" type="text" name="offsetTime" value="0" style="text-align: right;" />
+        <input id="update_offset_milliseconds" type="button" value="更新" name="updateOffsetMillisecondsButton" />
+
         <div id="form_caption" >2.ひとつの文字数（半分で折り返します）</div>
-        <input id="line_count" type="text" name="lineCount" value="30" style="text-align: right;">
-        <input id="update_line_count" type="button" value="更新" name="updateLineCountButton">
+        <input id="number" type="text" name="lineCount" value="30" style="text-align: right;" />
+        <input id="update_line_count" type="button" value="更新" name="updateLineCountButton" />
+
         <div id="form_caption" >3.オプション</div>
         <input id="replacing_dots" type="checkbox" name="replacingDots" value="" style="text-align: right;" checked>「、」は半角スペースに、「。」は削除する</input><br />
         <input id="dividing" type="checkbox" name="dividing" value="" style="text-align: right;" checked>行を半分で折り返す</input>
         <hr />
         <div id="form_caption" >【変換結果を表示】</div>
-        <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
+        <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />        
     </form>
     
     <hr />

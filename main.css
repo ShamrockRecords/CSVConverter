@@ -29,7 +29,11 @@ body {
     margin: 5px;
 }
 
-#offset_milliseconds {
+#detectedVersion {
+    margin: 5px;
+}
+
+#number {
     font-size: medium;
     margin: 5px;
 }
