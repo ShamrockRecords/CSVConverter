@@ -209,7 +209,7 @@ function generateResult(listener) {
                     tempEndTime = Math.floor(tempEndTime) ;
 
                     var tempBeginTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempBeginTime, ".") ;
-                    var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime - 100, ".") ;
+                    var tempEndTimeF = millisecToTime(Number((beginTime - offsetTime).toString()) + Number(form.offsetTime.value) + tempEndTime, ".") ;
 
                     if (tempBeginTimeF != "" && tempEndTimeF != "") {
                         result += listener(num, tempBeginTimeF, tempEndTimeF, tempContent) ;
