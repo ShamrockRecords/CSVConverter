@@ -139,7 +139,7 @@ function generateResult(listener) {
                 }
             }
         
-            if (endTime == 0)
+            if (endTime == 0) {
                 endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
             }
 
