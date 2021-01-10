@@ -133,10 +133,16 @@ function generateResult(listener) {
             // v2
             if (elements[1] != "") {
                 endTime = ParseToDate(elements[1]) ;
-            } else {
+
+                if (endTime < beginTime) {
+                    endTime = 0 ;
+                }
+            }
+        
+            if (endTime == 0)
                 endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
             }
-            
+
             content = elements[2] ;
         }
 
