@@ -20,7 +20,7 @@ function millisecToTime(millisec, separator) {
     var m = Math.floor(totalSeconds / 60) % 60 ;
     var h = Math.floor(totalSeconds / (60 * 60)) ;
 
-    return ('00' + h).slice(-2) + ":" + ('00' + m).slice(-2) + ":" + ('00' + s).slice(-2) + separator + ('000' + ms).slice(-3) ;
+    return h + ":" + ('00' + m).slice(-2) + ":" + ('00' + s).slice(-2) + separator + ('000' + ms).slice(-3) ;
 }
 
 // CSV -> Array
