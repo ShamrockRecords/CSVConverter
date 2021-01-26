@@ -18,9 +18,24 @@ h2 {
     border-left: solid 3px cadetblue;/*左線*/
 }
 
+#banner_icon {
+    vertical-align: middle;
+}
+
+#banner_text {
+    vertical-align: middle;
+    padding-left: 1em;
+}
+
 #caption, #detectedVersion {
     margin-left: 1em;
     font-size: small;
+}
+
+#link {
+    margin-left: 1em;
+    font-size: large;
+    font-weight: bold;
 }
 
 h3 {
