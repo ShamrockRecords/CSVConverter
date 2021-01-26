@@ -7,37 +7,40 @@
 </head>
 
 <body>
-    <div id="banner"><span id="banner_text">.sbvを作成（YouTube用）</span></div>
-    <div><p>【仕様】<ul><li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
-        <li>v1のファイルは一番最後の発話終了の時間がわからないので分割処理をしません。</li>
-        <li>ひとつの文字数を超えるか「。」で自動的に区切ります。</li>
+    <h1><span id="banner_text">.sbvを作成（YouTube用）</span></h1>
+    <h2>仕様</h2>
+        <ul id="caption">
+            <li>空白があり次の発話の開始時間が先の時は1文字あたりの発話にかかる時間を平均的な直で計算します。</li>
+            <li>v1のファイルは一番最後の発話終了の時間がわからないので分割処理をしません。</li>
+            <li>ひとつの文字数を超えるか「。」で自動的に区切ります。</li>
         </ul>
-    </div>
     <form name="openForm">
-        <p>【ファイルを読み込み】</p>
-        <div id="form_caption" >UDトークの会話ログ（.csv）を選択</div>
-        <input id="file_select" name="csvFile" type="file" /><br />
-        <input type="radio" name="version" value="0" checked>自動判別</input><br />
-        <input type="radio" name="version" value="1">v1</input><br />
-        <input type="radio" name="version" value="2">v2</input><br />
+        <hr />
+        <h2>ファイルを読み込み</h2>
+        <h3>UDトークの会話ログ（.csv）を選択</h3>
+        <input id="file_select" name="csvFile" type="file" />
+        <p>
+        <input id="caption" type="radio" name="version" value="0" checked>自動判別</input><br />
+        <input id="caption" type="radio" name="version" value="1">v1</input><br />
+        <input id="caption" type="radio" name="version" value="2">v2</input><br />
+        </p>
         <p id="detectedVersion"></p>
         <hr />
-        
-        <p>【設定】</p>
-        <div id="form_caption" >1.動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</div>
-        <input id="number" type="text" name="offsetTime" value="0" style="text-align: right;" />
-        <input id="update_offset_milliseconds" type="button" value="更新" name="updateOffsetMillisecondsButton" />
+        <h2>設定</h2>
+        <h3>動画の開始から最初の字幕までのオフセットを設定（ミリ秒）</h3>
+        <input id="caption" type="text" name="offsetTime" value="0" style="text-align: right;" />
+        <input id="caption" type="button" value="更新" name="updateOffsetMillisecondsButton" />
 
-        <div id="form_caption" >2.ひとつの文字数（半分で折り返します）</div>
-        <input id="number" type="text" name="lineCount" value="30" style="text-align: right;" />
-        <input id="update_line_count" type="button" value="更新" name="updateLineCountButton" />
+        <h3>ひとつの文字数（半分で折り返します）</h3>
+        <input id="caption" type="text" name="lineCount" value="30" style="text-align: right;" />
+        <input id="caption" type="button" value="更新" name="updateLineCountButton" />
 
-        <div id="form_caption" >3.オプション</div>
-        <input id="replacing_dots" type="checkbox" name="replacingDots" value="" style="text-align: right;" checked>「、」は半角スペースに、「。」は削除する</input><br />
-        <input id="dividing" type="checkbox" name="dividing" value="" style="text-align: right;" checked>行を半分で折り返す</input>
+        <h3>オプション</h3>
+        <input id="caption" type="checkbox" name="replacingDots" value="" checked>「、」は半角スペースに、「。」は削除する</input><br />
+        <input id="caption" type="checkbox" name="dividing" value="" checked>行を半分で折り返す</input>
         <hr />
-        <div id="form_caption" >【変換結果を表示】</div>
-        <textarea id="convert_result" name="output" cols="200" rows="40"></textarea><br />
+        <h2>変換結果を表示</h2>
+        <textarea id="result" name="output" cols="200" rows="40"></textarea><br />
     </form>
 
     <hr />

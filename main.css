@@ -1,49 +1,33 @@
 
 body {
     font-family: sans-serif;
+    margin:2em
 }
 
-#banner {
-    border: 2px solid #bbb;
-    padding: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+h1 {
+    color:cadetblue;/*文字色*/
+    border: solid 3px cadetblue;/*線色*/
+    padding: 0.5em;/*文字周りの余白*/
+    border-radius: 0.5em;/*角丸*/
+}
+
+h2 {
+    padding: 0.25em 0.5em;/*上下 左右の余白*/
+    color: #494949;/*文字色*/
+    background: transparent;/*背景透明に*/
+    border-left: solid 3px cadetblue;/*左線*/
+}
+
+#caption, #detectedVersion {
+    margin-left: 1em;
+    font-size: small;
+}
+
+h3 {
+    font-size: medium;
 }
 
 #footer {
     text-align: center;
-}
-
-#banner_icon {
-    vertical-align:middle;
-}
-
-#banner_text {
-    vertical-align:middle;
-    font-size: 30pt;
-    font-weight: bold;
-    padding: 10px;
- }
-
-#form_caption {
-    margin: 5px;
-}
-
-#detectedVersion {
-    margin: 5px;
-}
-
-#number {
-    font-size: medium;
-    margin: 5px;
-}
-
-#file_select {
-    font-size: medium;
-    margin: 5px;
-}
-
-#convert_result {
-    margin: 5px;
-    width: 100%;
+    font-size: small;
 }
