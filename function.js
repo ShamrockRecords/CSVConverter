@@ -26,7 +26,8 @@ function millisecToTime(millisec, separator) {
 // CSV -> Array
 function convert(fileContent) {
     var lines = new Array() ;
-    var rawLines = fileContent.split('\n') ;
+    fileContent = fileContent.replaceAll("\r\n", "\n") ;
+    var rawLines = fileContent.match(/"[^"]*"|[^\n]+/g) ;
 
     var ignoreCamma = false ;
     var element = "" ;
@@ -193,19 +194,19 @@ function generateResult(listener) {
             }
 
             if (tempContent.endsWith("。") || tempContent.length > countPerLine || s == segs.length) {
+                
                 if (dividing) {
-                    if (tempContent.length > countPerLine / 2) {
-                        tempContent = tempContent.slice(0, countPerLine / 2) + "\n" + tempContent.slice(countPerLine / 2) ;
-                    }
+                    tempContent = devideWith(tempContent, countPerLine / 2) ;
                 }
                                         
-                tempContent = tempContent.trim();
-
                 if (replacingDots) {
                     tempContent = tempContent.replace("、", " ") ;
                     tempContent = tempContent.replace("、", " ") ;
                     tempContent = tempContent.replace("。", "") ;
+                    tempContent = tempContent.replaceAll("\n ", "\n") ;
                 }
+    
+                tempContent = tempContent.trim();
 
                 if (tempContent.length != 0 && tempContent != "、" && tempContent != "。") {
                     var tempBeginTime = currnetIndex * timeOfChar ;   
@@ -230,4 +231,30 @@ function generateResult(listener) {
     }
 
     form.output.textContent = result ;
+}
+
+function devideWith(contents, index) {
+    if (contents.length > index) {
+
+        var segmenter = new TinySegmenter();
+        var segs = segmenter.segment(contents); 
+
+        contents = "" ;
+        var isSeparated = false ;
+
+        for (var i = 0; i<segs.length; i++) {
+            contents += segs[i] ;
+
+            if (!isSeparated && contents.length > index) {
+                contents += "\n" ;
+                isSeparated = true ;
+            }
+        }
+
+        // 英文対応
+        contents = contents.replaceAll("\n ", "\n") ;
+        contents = contents.replaceAll("\n.", ".") ;
+    }
+    
+    return contents ;
 }
