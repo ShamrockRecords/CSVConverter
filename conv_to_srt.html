@@ -80,7 +80,7 @@
                 var content = reader.result ;
                 lines = convert(content) ;
             
-                generateResult(function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
+                generateResult(lines, function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
                     return num.toString() + '\n' + tempBeginTimeF + ' --> ' + tempEndTimeF + '\n' + tempContent + '\n\n' ;
                 }) ;
             }) ;
@@ -88,7 +88,7 @@
 
         function updateResult() {
             if (lines != null) {
-                generateResult(function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
+                generateResult(lines, function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
                     return num.toString() + '\n' + tempBeginTimeF + ' --> ' + tempEndTimeF + '\n' + tempContent + '\n\n' ;
                 }) ;
             }

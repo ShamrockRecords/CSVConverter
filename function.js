@@ -23,19 +23,43 @@ function millisecToTime(millisec, separator) {
     return h + ":" + ('00' + m).slice(-2) + ":" + ('00' + s).slice(-2) + separator + ('000' + ms).slice(-3) ;
 }
 
+function parseToLines(contents) {
+    var lines = new Array() ;
+    var ignoreCamma = false ;
+    var line = "" ;
+
+    for (var x=0; x<contents.length; x++) {
+        var c = contents[x] ;
+
+        if (c == '"') {
+            ignoreCamma = !ignoreCamma ;
+            line += c ;
+        } else if (c == '\n' && !ignoreCamma) {
+            lines.push(line) ;
+            line = "" ;
+        } else {
+            line += c ;
+        }
+    }
+
+    return lines ;
+}
+
 // CSV -> Array
 function convert(fileContent) {
-    var lines = new Array() ;
     fileContent = fileContent.replaceAll("\r\n", "\n") ;
-    var rawLines = fileContent.match(/"[^"]*"|[^\n]+/g) ;
+    var rawLines = parseToLines(fileContent) ;
 
     var ignoreCamma = false ;
     var element = "" ;
     var elements = new Array() ;
 
-    for (var i=0; i<rawLines.length; i++) {
-        var rawLine = rawLines[i] ;
+    var lines = new Array() ;
 
+    for (var i=0; i<rawLines.length; i++) {
+        
+        var rawLine = rawLines[i] ;
+ 
         if (rawLine == "") {
             continue ;
         }
@@ -71,7 +95,7 @@ function convert(fileContent) {
     return lines ;
 }
 
-function generateResult(listener) {
+function generateResult(lines, listener) {
     var version = 2 ;
 
     if (form.version.value == 0) {
@@ -111,6 +135,7 @@ function generateResult(listener) {
 
     for (var i=0; i<lines.length; i++) {
         var elements = lines[i] ;
+        console.log(elements) ;
         var nextElements = null ;
         
         if (i+1 < lines.length) {
