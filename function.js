@@ -42,6 +42,10 @@ function parseToLines(contents) {
         }
     }
 
+    if (line != "") {
+        lines.push(line) ;
+    }
+    
     return lines ;
 }
 
