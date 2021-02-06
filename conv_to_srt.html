@@ -89,7 +89,7 @@
                 lines = convert(content) ;
             
                 generateResult(lines, function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
-                    return num.toString() + '\n' + tempBeginTimeF + ' --> ' + tempEndTimeF + '\n' + tempContent + '\n\n' ;
+                    return num.toString() + '\n' + tempBeginTimeF.replaceAll(".", ",") + ' --> ' + tempEndTimeF.replaceAll(".", ",") + '\n' + tempContent + '\n\n' ;
                 }) ;
             }) ;
         })
@@ -97,7 +97,7 @@
         function updateResult() {
             if (lines != null) {
                 generateResult(lines, function(num, tempBeginTimeF, tempEndTimeF, tempContent) {
-                    return num.toString() + '\n' + tempBeginTimeF + ' --> ' + tempEndTimeF + '\n' + tempContent + '\n\n' ;
+                    return num.toString() + '\n' + tempBeginTimeF.replaceAll(".", ",") + ' --> ' + tempEndTimeF.replaceAll(".", ",") + '\n' + tempContent + '\n\n' ;
                 }) ;
             }
         }
