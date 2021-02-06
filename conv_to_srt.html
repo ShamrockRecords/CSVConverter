@@ -44,7 +44,7 @@
         <p id="caption" >Facebook用に使用するファイルは「ファイル名.[言語コード]_[国コード].srt」で保存します。つまり日本語だと「字幕.ja_JP.srt」、英語だと「字幕.en_US.srt」になります。</p>
         <h3>ファイル名</h3>
         <p>ファイル名に拡張子.srtで保存します。</p>
-        ファイル名</input><input id="caption" type="text" name="fileTitle" value="字幕データ.ja_JP.srt" />
+        ファイル名</input><input id="caption" type="text" name="fileTitle" value="字幕データ.ja_JP" />
         <input id="caption" type="button" value="ファイルで保存" name="saveAsFileButton" />
         <textarea id="result" name="output"></textarea><br />
     </form>
@@ -63,6 +63,10 @@
         function eventListener(e) {
             updateResult() ;
         } ;
+
+        form.saveAsFileButton.addEventListener('click', function(e) {
+            saveAsFile(form.output.textContent, form.fileTitle.value + ".srt") ;
+        }) ;
 
         form.updateOffsetMillisecondsButton.addEventListener('click', eventListener) ;
         form.updateLineCountButton.addEventListener('click', eventListener) ;
