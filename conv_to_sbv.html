@@ -3,8 +3,8 @@
     <meta charset="utf-8">
     <title>.sbvを作成（YouTube用）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel='stylesheet' href='main.css?ver=1.0.0' type='text/css' media='all' />
-    <script src="function.js"></script>
+    <link rel='stylesheet' href='main.css?ver=2' type='text/css' media='all' />
+    <script src="function.js?ver=2"></script>
 </head>
 
 <body>
@@ -41,6 +41,10 @@
         <input id="caption" type="checkbox" name="dividing" value="" checked>行を半分で折り返す</input>
         <hr />
         <h2>変換結果を表示</h2>
+        <h3>ファイル名</h3>
+        <p>ファイル名に拡張子.sbvで保存します。</p>
+        ファイル名</input><input id="caption" type="text" name="fileTitle" value="字幕データ" />
+        <input id="caption" type="button" value="ファイルで保存" name="saveAsFileButton" />
         <textarea id="result" name="output"></textarea><br />
     </form>
 
@@ -59,11 +63,16 @@
             updateResult() ;
         } ;
 
+        form.saveAsFileButton.addEventListener('click', function(e) {
+            saveAsFile(form.output.textContent, form.fileTitle.value + ".sbv") ;
+        }) ;
+
         form.updateOffsetMillisecondsButton.addEventListener('click', eventListener) ;
         form.updateLineCountButton.addEventListener('click', eventListener) ;
         form.replacingDots.addEventListener('change', eventListener) ;
         form.dividing.addEventListener('change', eventListener) ;
 
+        
         form.csvFile.addEventListener('change', function(e) {
             form.csvFile.textContent = "" ;
             lines = null ;

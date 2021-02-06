@@ -1,3 +1,22 @@
+function saveAsFile(contents, fileName) { 
+    if (contents == "") {
+        return ;
+    }
+    
+    var blob = new Blob([contents], {type: "text/plain"}); 
+
+    if(window.navigator.msSaveBlob)
+    {
+        window.navigator.msSaveBlob(blob, fileName);
+    } else {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.target = '_blank';
+        a.download = fileName;
+        a.click();
+    }
+}
+
 function ParseToDate(dateStriing) {
     var s = dateStriing ;
     var a = s.split(/[^0-9]/);
@@ -45,7 +64,7 @@ function parseToLines(contents) {
     if (line != "") {
         lines.push(line) ;
     }
-    
+
     return lines ;
 }
 
