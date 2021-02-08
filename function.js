@@ -21,10 +21,12 @@ function ParseToDate(dateStriing) {
     var s = dateStriing ;
     var a = s.split(/[^0-9]/);
 
-    if (a.length < 7) {
-        return null ;
-    } else {
+    if (a.length == 7) {
         return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],a[6] );
+    } else if (a.length == 6) {
+        return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5],0 );
+    } else {
+        return null ;
     }
 }
 
