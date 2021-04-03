@@ -32,6 +32,12 @@ h2 {
     font-size: small;
 }
 
+#fileTitle {
+    margin-left: 1em;
+    font-size: small;
+    width: 50%; 
+}
+
 #link {
     margin-left: 1em;
     font-size: large;

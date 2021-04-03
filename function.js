@@ -213,7 +213,6 @@ function generateResult(lines, listener) {
         
         var countPerLine = Number(form.lineCount.value) ;
         var currnetIndex = 0 ;
-        var currentOffset = 0 ;
         var segmenter = new TinySegmenter();
         var segs ;
         

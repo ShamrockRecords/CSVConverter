@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <title>.sbvファイルを作成（YouTube用）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel='stylesheet' href='main.css?ver=2' type='text/css' media='all' />
+    <link rel='stylesheet' href='main.css?ver=3' type='text/css' media='all' />
     <script src="function.js?ver=1.0.0"></script>
 </head>
 
@@ -43,7 +43,7 @@
         <h2>変換結果を表示</h2>
         <h3>ファイル名</h3>
         <p>ファイル名に拡張子.sbvで保存します。</p>
-        ファイル名</input><input id="caption" type="text" name="fileTitle" value="字幕データ" />
+        ファイル名</input><input id="fileTitle" type="text" name="fileTitle" value="" />
         <input id="caption" type="button" value="ファイルで保存" name="saveAsFileButton" />
         <textarea id="result" name="output"></textarea><br />
     </form>
@@ -72,7 +72,6 @@
         form.replacingDots.addEventListener('change', eventListener) ;
         form.dividing.addEventListener('change', eventListener) ;
 
-        
         form.csvFile.addEventListener('change', function(e) {
             form.csvFile.textContent = "" ;
             lines = null ;
@@ -82,6 +81,8 @@
             var result = e.target.files[0];
             var reader = new FileReader() ;
         
+            form.fileTitle.value = result.name.split('.')[0] ;
+
             reader.readAsText(result) ;
             
             reader.addEventListener('load', function() {
