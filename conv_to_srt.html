@@ -39,6 +39,10 @@
         <h3>オプション</h3>
         <input id="caption" type="checkbox" name="replacingDots" value="" checked>「、」は半角スペースに、「。」は削除する</input><br />
         <input id="caption" type="checkbox" name="dividing" value="" checked>行を半分で折り返す</input>
+        <p>
+            字幕の表示時間を長くする（ミリ秒）<input id="caption" type="text" name="extendedTime" value="0" style="text-align: right;" />
+            <input id="caption" type="button" value="更新" name="updateExtendedMillisecondsButton" />
+        </p>
         <hr />
         <h2>変換結果を表示</h2>
         <p id="caption" >Facebook用に使用するファイルは「ファイル名.[言語コード]_[国コード].srt」で保存します。つまり日本語だと「字幕.ja_JP.srt」、英語だと「字幕.en_US.srt」になります。</p>
@@ -70,6 +74,7 @@
 
         form.updateOffsetMillisecondsButton.addEventListener('click', eventListener) ;
         form.updateLineCountButton.addEventListener('click', eventListener) ;
+        form.updateExtendedMillisecondsButton.addEventListener('click', eventListener) ;
         form.replacingDots.addEventListener('change', eventListener) ;
         form.dividing.addEventListener('change', eventListener) ;
 
