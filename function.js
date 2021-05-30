@@ -173,12 +173,12 @@ function generateResult(lines, listener) {
         }
 
         var beginTime = ParseToDate(elements[0]) ;
-        var endTime = 0 ;
+        var endTime = null ;
         var content = "" ;
 
         if (version == 1) {
             // v1
-            endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+            endTime = nextElements != null ? ParseToDate(nextElements[0]) : null ;
             content = elements[1] ;
         } else {
             // v2
@@ -186,14 +186,27 @@ function generateResult(lines, listener) {
                 endTime = ParseToDate(elements[1]) ;
 
                 if (endTime < beginTime) {
-                    endTime = 0 ;
+                    endTime = null ;
                 }
             }
         
-            if (endTime == 0) {
-                endTime = nextElements != null ? ParseToDate(nextElements[0]) : 0 ;
+            if (endTime == null) {
+                endTime = nextElements != null ? ParseToDate(nextElements[0]) : null ;
             }
 
+            var extendedTime = Number(form.extendedTime.value) ;
+
+            if (endTime != null && extendedTime != 0) {
+                endTime = new Date(endTime.getTime() + extendedTime) ;
+
+                if (nextElements != null) {
+                   
+                    if (endTime.getTime() > ParseToDate(nextElements[0]).getTime()) {
+                        endTime = ParseToDate(nextElements[0]) ;
+                    }
+                }
+            }
+            
             content = elements[2] ;
         }
 
@@ -203,12 +216,8 @@ function generateResult(lines, listener) {
 
         var timeOfChar = 60000 / 300 ; // average
 
-        if (endTime != 0) {
+        if (endTime != null) {
             timeOfChar = (endTime - beginTime) / content.length ;
-        
-            if (timeOfChar > 60000 / 300) { // if over average, reset to average.
-                timeOfChar = 60000 / 300 ;   
-            }
         }
         
         var countPerLine = Number(form.lineCount.value) ;
@@ -216,7 +225,7 @@ function generateResult(lines, listener) {
         var segmenter = new TinySegmenter();
         var segs ;
         
-        if (endTime != 0) {
+        if (endTime != "") {
             segs = segmenter.segment(content); 
         } else {
             segs = new Array();
