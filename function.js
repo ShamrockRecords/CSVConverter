@@ -254,6 +254,8 @@ function generateResult(lines, listener) {
                     tempContent = tempContent.replace("。", "") ;
                     tempContent = tempContent.replaceAll("\n ", "\n") ;
                 }
+
+                tempContent = tempContent.replaceAll("\n\n", "\n") ;
     
                 tempContent = tempContent.trim();
 
